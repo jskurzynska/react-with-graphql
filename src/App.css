@@ -13,15 +13,12 @@
   color: gainsboro;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.loading {
+  background-color: #282c34;
+  min-height: 50vh;
+  align-items: center;
+  justify-content: center;
+  font-size: 10vh;
+  color: white;
+  min-width: 100vw;
 }

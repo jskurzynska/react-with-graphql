@@ -12,7 +12,20 @@ import {
 
 const client = new ApolloClient({
   uri: 'https://api.spacex.land/graphql/',
-  cache: new InMemoryCache()
+  cache:  new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          launches(_, { args, toReference }) {
+            return toReference({
+              __typename: 'Launches',
+              id: args?.id,
+            });
+          }
+        }
+      }
+    }
+  })
 });
 
 
