@@ -1,30 +1,30 @@
 import React from 'react';
+import {
+  useQuery
+} from "@apollo/client";
 import './App.css';
 import { LaunchResultProps } from './Missions';
 import MissionsTable from './MissionsTable';
-import {
-  useQuery,
-  gql
-} from "@apollo/client";
+import { getLaunchesQuery} from './api';
 
-const launchesQuery = gql`
-  query GetLaunches {
-    launches(limit: 10, sort: "launch_date_utc", order: "desc") {
-      launch_date_utc
-      id
-      mission_name
-      mission_id
-    }
-  }`;
-
-interface LaunchesResultData {
+interface LaunchesData {
   launches: LaunchResultProps[];
 };
+interface LaunchesVars {
+  limit?: number;
+}
 
 function App() {
-  const { loading, error, data } = useQuery<LaunchesResultData>(launchesQuery);
+  const { loading, error, data } = useQuery<LaunchesData, LaunchesVars>(
+    getLaunchesQuery,
+    {
+      variables: {
+        limit: 10
+      }
+    }
+  );
 
-  if (error) return <p>Error :(</p>;
+  if (error) return <p>Ups.. Something went wrong :(</p>;
 
   return (
     <div className="App">

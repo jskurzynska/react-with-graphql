@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import {
-    useQuery,
-    gql
+    useQuery
 } from "@apollo/client";
+import moment from 'moment';
 import './MissionRow.css';
-
-const missionDescriptionQuery = gql`
-  query GetMissionDescription($id: ID!) { 
-    mission(id: $id) { description } 
-  }`;
+import { getMissionDescriptionQuery } from './api';
 
 export interface MissionProps {
     identifier: string;
@@ -31,10 +27,12 @@ interface MissionDetailsVars {
 
 const MissionRow = (props: MissionProps) => {
     const { loading, error, data } = useQuery<MissionDetailsData, MissionDetailsVars>(
-        missionDescriptionQuery,
+        getMissionDescriptionQuery,
         {
-            skip: props.missionId.length === 0,
-            variables: { id: props.missionId[0] }
+            skip: !props.missionId.length,
+            variables: { 
+                id: props.missionId[0] 
+            }
         }
     );
 
@@ -54,13 +52,7 @@ const MissionRow = (props: MissionProps) => {
                     defaultChecked={favourite}
                     onChange={onCheckboxChange} />
             </td>
-            <td>{new Date(props.date).toLocaleDateString("pl-PL", {
-                year: "numeric",
-                month: "long",
-                day: "2-digit",
-                hour: 'numeric',
-                minute: 'numeric'
-            })} </td>
+            <td>{moment.utc(props.date).local().format('DD MMMM yyyy, HH:mm')} </td>
             <td>{props.name}</td>
             <td className='description'>{data?.mission.description}</td>
         </tr>
